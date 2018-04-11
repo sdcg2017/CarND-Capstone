@@ -31,6 +31,8 @@ that we have created in the `__init__` function.
 
 '''
 
+SAMPLE_RATE = 20 # Must be 50Hz when testing on Carla!
+
 class DBWNode(object):
     def __init__(self):
         rospy.init_node('dbw_node')
@@ -80,32 +82,41 @@ class DBWNode(object):
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(50) # 50Hz
+        rate = rospy.Rate(SAMPLE_RATE)
         while not rospy.is_shutdown():
             # TODO: Get predicted throttle, brake, and steering using `twist_controller`
             # You should only publish the control commands if dbw is enabled
 
-            if not None in(self.current_vel, self.target_linear_vel, self.target_angular_vel):
+            if (self.current_vel is not None
+                    and self.target_linear_vel is not None
+                    and self.target_angular_vel is not None):
                 self.throttle, self.brake, self.steering = self.controller.control(self.current_vel,
                                                                                    self.dbw_enabled,
                                                                                    self.target_linear_vel,
                                                                                    self.target_angular_vel)
             # Only publish control commands in dbw is enabled
             if self.dbw_enabled:
+
                 self.publish(self.throttle, self.brake, self.steering)
+                rospy.logwarn("... Publishing ...")
 
             rate.sleep()
 
     def dbw_enabled_cb(self, msg):
         self.dbw_enabled = msg
+        rospy.logwarn("--------- DBW enabled: {0} ---------".format(self.dbw_enabled))
 
     def curr_velocity_cb(self, msg):
         self.current_vel = msg.twist.linear.x
         self.curr_ang_vel = msg.twist.angular.z
+        #rospy.logwarn("Current velocity: {0}".format(self.current_vel))
+        #rospy.logwarn("Current angular velocity: {0}".format(self.curr_ang_vel))
 
     def target_velocity_cb(self, msg):
         self.target_linear_vel = msg.twist.linear.x
         self.target_angular_vel = msg.twist.angular.z
+        #rospy.logwarn("Target velocity: {0}".format(self.target_linear_vel))
+        #rospy.logwarn("Target angular velocity: {0}".format(self.target_angular_vel))
 
     def publish(self, throttle, brake, steer):
         tcmd = ThrottleCmd()
