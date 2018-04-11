@@ -45,10 +45,11 @@ class WaypointUpdater(object):
 
         self.loop()
         #<< pparthas: Added
-        #<> pparthas: Commented below 
+        #<> pparthas: Commented below
         #rospy.spin()
 
-	#>> pparthas: Added
+	#>> pparthas: Added new functions below
+    
 	def loop(self):
 		rate = rospy.Rate(50)
 		while not rospy.is_shutdown():
@@ -71,7 +72,7 @@ class WaypointUpdater(object):
         cl_vect = np.array(closest_coord)
         prev_vect = np.array(prev_coord)
         pos_vect = np.array([x, y])
-        
+
 		# Math to pick out only closest in front of car and not behind it
         val = np.dot(cl_vect - prev_vect, pos_vect - cl_vect)
         if val > 0:
@@ -83,6 +84,7 @@ class WaypointUpdater(object):
 		lane.header = self.base_waypoints.header
 		lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx+LOOKAHEAD_WPS]
         self.final_waypoints_pub.publish(lane)
+
     #<< pparthas: Added
 
 	def pose_cb(self, msg):
