@@ -3,8 +3,11 @@
 import rospy
 from geometry_msgs.msg import PoseStamped
 from styx_msgs.msg import Lane, Waypoint
+from scipy.spatial import KDTree
+from std_msgs.msg import Int32
 
 import math
+import numpy as np
 
 '''
 This node will publish waypoints from the car's current position to some `x` distance ahead.
@@ -42,37 +45,33 @@ class WaypointUpdater(object):
         self.base_waypoints = None
         self.waypoints_2d = None
         self.waypoint_tree = None
+	self.loop()
 
-        self.loop()
-        #<< pparthas: Added
-        #<> pparthas: Commented below
-        #rospy.spin()
-
-	#>> pparthas: Added new functions below
-	def loop(self):
-		rate = rospy.Rate(50)
-		while not rospy.is_shutdown():
-			if self.pose and self.base_waypoints:
-				# Get closest waypoint
-				closest_waypoint_idx = self.get_closest_waypoint_idx()
-				self.publish_waypoints(closest_waypoint_idx)
-			rate.sleep()
+#>> pparthas: Added new functions below
+    def loop(self):
+	rate = rospy.Rate(50)
+	while not rospy.is_shutdown():
+		if self.pose and self.base_waypoints:
+			# Get closest waypoint
+			closest_waypoint_idx = self.get_closest_waypoint_idx()
+			self.publish_waypoints(closest_waypoint_idx)
+		rate.sleep()
 
     def get_closest_waypoint_idx(self):
         x = self.pose.pose.position.x
         y = self.pose.pose.position.y
-        closest_idx = self.waypoint_tree.query([x, y],1)[1]
+        closest_idx = self.waypoint_tree.query([x, y], 1)[1]
 
         # Check if the closest is ahead or behind the ego vehicle
         closest_coord = self.waypoints_2d[closest_idx]
-        prev_coord = self.waypoints_2d[closest_idx - 1]
+        prev_coord = self.waypoints_2d[closest_idx-1]
 
         # Equation for hyperplane through closest_coords
         cl_vect = np.array(closest_coord)
         prev_vect = np.array(prev_coord)
         pos_vect = np.array([x, y])
 
-		# Math to pick out only closest in front of car and not behind it
+	# Math to pick out only closest in front of car and not behind it
         val = np.dot(cl_vect - prev_vect, pos_vect - cl_vect)
         if val > 0:
             closest_idx = (closest_idx + 1) % len(self.waypoints_2d)
@@ -83,9 +82,9 @@ class WaypointUpdater(object):
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx+LOOKAHEAD_WPS]
         self.final_waypoints_pub.publish(lane)
-    #<< pparthas: Added
+#<< pparthas: Added
 
-	def pose_cb(self, msg):
+    def pose_cb(self, msg):
         # TODO: Implement
         #<> pparthas: Added
         self.pose = msg
