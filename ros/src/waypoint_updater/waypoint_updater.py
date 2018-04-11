@@ -49,7 +49,6 @@ class WaypointUpdater(object):
         #rospy.spin()
 
 	#>> pparthas: Added new functions below
-    
 	def loop(self):
 		rate = rospy.Rate(50)
 		while not rospy.is_shutdown():
@@ -80,11 +79,10 @@ class WaypointUpdater(object):
         return closest_idx
 
     def publish_waypoints(self, closest_idx):
-		lane = Lane()
-		lane.header = self.base_waypoints.header
-		lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx+LOOKAHEAD_WPS]
+        lane = Lane()
+        lane.header = self.base_waypoints.header
+        lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx+LOOKAHEAD_WPS]
         self.final_waypoints_pub.publish(lane)
-
     #<< pparthas: Added
 
 	def pose_cb(self, msg):
