@@ -98,12 +98,12 @@ class DBWNode(object):
             if self.dbw_enabled:
 
                 self.publish(self.throttle, self.brake, self.steering)
-                rospy.logwarn("... Publishing ...")
+                #rospy.logwarn("... Publishing ...")
 
             rate.sleep()
 
     def dbw_enabled_cb(self, msg):
-        self.dbw_enabled = msg
+        self.dbw_enabled = msg.data
         rospy.logwarn("--------- DBW enabled: {0} ---------".format(self.dbw_enabled))
 
     def curr_velocity_cb(self, msg):
