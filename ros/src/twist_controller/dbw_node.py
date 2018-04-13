@@ -73,7 +73,7 @@ class DBWNode(object):
         rospy.Subscriber('/twist_cmd', TwistStamped, self.target_velocity_cb) # Receives target linear and angular velocities
 
         self.current_vel = None
-        self.curr_ang_vel = None
+        self.current_angular_vel = None
         self.dbw_enabled = None
         self.target_linear_vel = None
         self.target_angular_vel = None
@@ -91,6 +91,7 @@ class DBWNode(object):
                     and self.target_linear_vel is not None
                     and self.target_angular_vel is not None):
                 self.throttle, self.brake, self.steering = self.controller.control(self.current_vel,
+                                                                                   self.current_angular_vel,
                                                                                    self.dbw_enabled,
                                                                                    self.target_linear_vel,
                                                                                    self.target_angular_vel)
@@ -104,11 +105,10 @@ class DBWNode(object):
 
     def dbw_enabled_cb(self, msg):
         self.dbw_enabled = msg.data
-        rospy.logwarn("--------- DBW enabled: {0} ---------".format(self.dbw_enabled))
 
     def curr_velocity_cb(self, msg):
         self.current_vel = msg.twist.linear.x
-        self.curr_ang_vel = msg.twist.angular.z
+        self.current_angular_vel = msg.twist.angular.z
         #rospy.logwarn("Current velocity: {0}".format(self.current_vel))
         #rospy.logwarn("Current angular velocity: {0}".format(self.curr_ang_vel))
 
