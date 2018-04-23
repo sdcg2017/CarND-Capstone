@@ -15,16 +15,19 @@ class Controller(object):
         min_speed = 0.1
 
         self.yaw_controller = YawController(wheel_base, steer_ratio, min_speed, max_lat_accel, max_steer_angle)
-        steer_kp = 1.5
+        steer_kp = 1.15
         steer_ki = 0.001
-        steer_kd = 0.0
+        steer_kd = 0.1
         min_steer = -max_steer_angle
         max_steer = max_steer_angle
         self.steering_controller = PID(steer_kp, steer_ki, steer_kd, min_steer, max_steer)
 
-        throttle_kp = 0.8
-        throttle_ki = 0.002
-        throttle_kd = 0.3
+        throttle_kp = 0.3
+        throttle_ki = 0.1
+        throttle_kd = 0.005
+        #throttle_kp = 0.8
+        #throttle_ki = 0.002
+        #throttle_kd = 0.3
         min_throttle = 0.0 # Minimum throttle value
         max_throttle = 0.2 # Maximum throttle value (should be OK for simulation, not for Carla!)
         self.throttle_controller = PID(throttle_kp, throttle_ki, throttle_kd, min_throttle, max_throttle)
