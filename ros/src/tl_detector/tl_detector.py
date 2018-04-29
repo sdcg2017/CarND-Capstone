@@ -48,7 +48,7 @@ class TLDetector(object):
 
         self.bridge = CvBridge()
         self.model_path = rospy.get_param('~model_path')
-	# rospy.logwarn('model_path {}'.format(self.model_path))
+	    rospy.logwarn('model_path {}'.format(self.model_path))
         self.light_classifier = TLClassifier(self.model_path)
         self.listener = tf.TransformListener()
 
@@ -79,7 +79,7 @@ class TLDetector(object):
         self.camera_image = msg
         light_wp, state = self.process_traffic_lights()
 	light = Light()
- 
+
         '''
         Publish upcoming red lights at camera frequency.
         Each predicted state has to occur `STATE_COUNT_THRESHOLD` number
@@ -94,13 +94,13 @@ class TLDetector(object):
 	    if state != TrafficLight.RED and state != TrafficLight.YELLOW:
             	light_wp = -1
 
-            self.last_wp = light_wp	    
+            self.last_wp = light_wp
 	    light.index = light_wp
-	    light.state = state 
+	    light.state = state
             self.upcoming_red_light_pub.publish(light)
         else:
 	    light.index = self.last_wp
-	    light.state = self.last_state 
+	    light.state = self.last_state
             self.upcoming_red_light_pub.publish(light)
         self.state_count += 1
 
@@ -127,7 +127,7 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-	# 
+	#
         # derive this state by classification and light coordinate
         #return light.state
 
@@ -153,7 +153,7 @@ class TLDetector(object):
             location and color
 
         Returns:
-            int: index of waypoint closes to the upcoming stop line for a traffic light 
+            int: index of waypoint closes to the upcoming stop line for a traffic light
 	    (-1 if none exists)
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
         """
