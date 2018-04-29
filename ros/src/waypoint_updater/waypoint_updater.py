@@ -50,7 +50,7 @@ class WaypointUpdater(object):
         self.base_waypoints = None
         self.waypoints_2d = None
         self.waypoint_tree = None
-    self.loop()
+        self.loop()
 
 #>> pparthas: Added new functions below
 #    def loop(self):
@@ -63,11 +63,11 @@ class WaypointUpdater(object):
 #       rate.sleep()
 #Nianfeng: 
     def loop(self):
-    rate = rospy.Rate(50)
-    while not rospy.is_shutdown():
-        if self.pose and self.base_lane:
-            self.publish_waypoints()
-        rate.sleep()
+        rate = rospy.Rate(50)
+        while not rospy.is_shutdown():
+            if self.pose and self.base_lane:
+                self.publish_waypoints()
+            rate.sleep()
 
     def get_closest_waypoint_idx(self):
         x = self.pose.pose.position.x
