@@ -47,8 +47,7 @@ class TLDetector(object):
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Light, queue_size=1)
 
         self.bridge = CvBridge()
-        self.scenario = rospy.get_param("~scenario")
-        if scenario == "sim":
+		if rospy.get_param('~sim') == 1:
         	self.model_path = "./light_classification/models/simulator/frozen_inference_graph.pb"
         else:
         	self.model_path = "./light_classification/models/real/frozen_inference_graph.pb"
