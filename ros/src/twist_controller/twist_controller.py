@@ -15,9 +15,12 @@ class Controller(object):
         min_speed = 0.1
 
         self.yaw_controller = YawController(wheel_base, steer_ratio, min_speed, max_lat_accel, max_steer_angle)
-        steer_kp = 1.15
-        steer_ki = 0.001
-        steer_kd = 0.1
+        steer_kp = 0.4
+        steer_ki = 0.1
+        steer_kd = 0.005
+#        steer_kp = 1.15
+#        steer_ki = 0.001
+#        steer_kd = 0.1
         min_steer = -max_steer_angle
         max_steer = max_steer_angle
         self.steering_controller = PID(steer_kp, steer_ki, steer_kd, min_steer, max_steer)
