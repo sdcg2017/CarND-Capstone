@@ -31,7 +31,7 @@ that we have created in the `__init__` function.
 
 '''
 
-SAMPLE_RATE = 20 # Must be 50Hz when testing on Carla!
+SAMPLE_RATE = 50 # Must be 50Hz when testing on Carla!
 
 class DBWNode(object):
     def __init__(self):
