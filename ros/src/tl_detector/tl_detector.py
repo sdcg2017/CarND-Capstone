@@ -100,6 +100,7 @@ class TLDetector(object):
             self.upcoming_red_light_pub.publish(Int32(light_wp))
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
+        
         self.state_count += 1
 
     def get_closest_waypoint(self, x, y):
@@ -180,7 +181,6 @@ class TLDetector(object):
         if closest_light:
             state = self.get_light_state(closest_light)
             return line_wp_idx, state
-        self.waypoints = None
 
         return -1, TrafficLight.UNKNOWN
 
